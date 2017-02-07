@@ -4,7 +4,7 @@
 Strolch = {
 
     props: {
-        strolch_js: '0.1.1',
+        strolch_js: '0.1.2',
         version: null,
         revision: null,
         userConfig: null,
@@ -81,10 +81,9 @@ Strolch = {
         if (this.props.version == null) {
             this.props.version = "unknown";
             $.ajax({
-                    async: false,
-                    url: that.urls.version
-                }
-            ).done(function (data) {
+                async: false,
+                url: that.urls.version
+            }).done(function (data) {
                 if (data != null) {
                     var ver = data.appVersion.artifactVersion;
                     var rev = data.appVersion.scmRevision;
@@ -107,10 +106,9 @@ Strolch = {
         if (this.props.revision == null) {
             this.props.revision = Math.floor(Math.random() * 10000000);
             $.ajax({
-                    async: false,
-                    url: that.urls.version
-                }
-            ).done(function (data) {
+                async: false,
+                url: that.urls.version
+            }).done(function (data) {
                 if (data != null) {
                     var rev = data.appVersion.scmRevision;
                     if (rev != '${buildNumber}') {
@@ -188,12 +186,20 @@ Strolch = {
     /*
      * Utils
      */
+    getQueryParamsAsString: function () {
+        var hash = document.location.hash;
+        var hashParts = hash.split('?');
+        if (hashParts.length !== 2)
+            return '';
+        return hashParts[1];
+    },
+
     getQueryParamValue: function (paramName) {
 
         var hash = document.location.hash;
         var hashParts = hash.split('?');
         if (hashParts.length !== 2)
-            return '';
+            return null;
 
         var queryParams = hashParts[1];
         var queryArr = queryParams.split('&');
@@ -208,7 +214,7 @@ Strolch = {
             }
         }
 
-        return '';
+        return null;
     },
     setQueryParamValue: function (paramName, paramValue) {
 
@@ -219,8 +225,14 @@ Strolch = {
             return;
         }
 
+        if (Strolch.isEmptyString(hashParts[1])) {
+            document.location.hash = hashParts[0] + '?' + paramName + '=' + paramValue;
+            return;
+        }
+
         hash = hashParts[0] + '?';
 
+        var set = false;
         var queryParams = hashParts[1];
         var queryArr = queryParams.split('&');
         for (var i = 0; i < queryArr.length; i++) {
@@ -228,14 +240,21 @@ Strolch = {
             var queryParam = query.split('=');
             if (queryParam.length !== 2 || queryParam[0] !== paramName) {
                 hash += query;
-                if (i + 1 < queryArr.length)
+                if (i + 1 < queryArr.length) {
                     hash += '&';
+                }
                 continue;
             }
 
             hash += paramName + '=' + paramValue;
-            if (i + 1 < queryArr.length)
+            if (i + 1 < queryArr.length) {
                 hash += '&';
+            }
+            set = true;
+        }
+
+        if (!set) {
+            hash += '&' + paramName + '=' + paramValue;
         }
 
         document.location.hash = hash
@@ -343,8 +362,7 @@ Strolch = {
             },
             next: function () {
                 var index = this.values.indexOf(this.current) + 1;
-                if (index == this.values.length)
-                    index = 0;
+                if (index == this.values.length) index = 0;
                 this.current = this.values[index];
                 return this.current;
             },
@@ -425,13 +443,10 @@ Strolch = {
             if (locale != null) {
                 locales.push(locale);
                 var sepIndex = locale.indexOf("-", 0);
-                if (sepIndex == -1)
-                    sepIndex = locale.indexOf("_", 0);
-                if (sepIndex != -1)
-                    locales.push(locale.substring(0, sepIndex));
+                if (sepIndex == -1) sepIndex = locale.indexOf("_", 0);
+                if (sepIndex != -1) locales.push(locale.substring(0, sepIndex));
             }
-            if (locale.indexOf("en") != 0)
-                locales.push("en");
+            if (locale.indexOf("en") != 0) locales.push("en");
 
             var bundle = null;
             for (var i = 0; i < locales.length; ++i) {
@@ -448,17 +463,14 @@ Strolch = {
         },
 
         init: function () {
-            if (this.locale == null)
-                this.locale = this.detectLocale();
-            if (this.bundle == null)
-                this.bundle = this.load18n(this.path, this.locale, this.resource);
+            if (this.locale == null) this.locale = this.detectLocale();
+            if (this.bundle == null) this.bundle = this.load18n(this.path, this.locale, this.resource);
         },
 
         t: function (key, properties) {
             this.init();
             var msg = this.bundle[key];
-            if (msg == null)
-                msg = key;
+            if (msg == null) msg = key;
 
             if (properties) {
                 $.each(properties, function (key, value) {
