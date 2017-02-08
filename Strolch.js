@@ -342,6 +342,46 @@ Strolch = {
         return date.toLocaleDateString('de-CH')
     },
 
+    toLocalDateTime: function (val) {
+        if (this.isEmptyString(val) || val == '-')
+            return '-';
+        var date = new Date(val);
+        if (this.props.locale != null)
+            return date.toLocaleDateString(this.props.locale) + ' ' + date.toLocaleTimeString(this.props.locale);
+        return date.toLocaleDateString('de-CH') + ' ' + date.toLocaleTimeString('de-CH');
+    },
+
+    toDateTime: function (val) {
+
+        function pad10(i) {
+            if (i < 10)
+                return '0' + i;
+            return i;
+        }
+
+        function pad100(i) {
+            if (i < 10)
+                return '00' + i;
+            if (i < 100)
+                return '0' + i;
+            return i;
+        }
+
+        if (this.isEmptyString(val) || val == '-')
+            return '-';
+        var date = new Date(val);
+
+        var y = date.getFullYear();
+        var m = pad10(date.getMonth());
+        var d = pad10(date.getDate());
+        var h = pad10(date.getHours());
+        var mi = pad10(date.getMinutes());
+        var s = pad10(date.getSeconds());
+        var mil = pad100(date.getMilliseconds());
+
+        return y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s + '.' + mil;
+    },
+
     isInfinite: function (val) {
         if (val == '-')
             return true;
