@@ -221,12 +221,16 @@ Strolch = {
         var hash = document.location.hash;
         var hashParts = hash.split('?');
         if (hashParts.length !== 2) {
-            document.location.hash = hash + '/?' + paramName + '=' + paramValue;
+            if (Strolch.isNotEmptyString(paramValue)) {
+                document.location.hash = hash + '/?' + paramName + '=' + paramValue;
+            }
             return;
         }
 
         if (Strolch.isEmptyString(hashParts[1])) {
-            document.location.hash = hashParts[0] + '?' + paramName + '=' + paramValue;
+            if (Strolch.isNotEmptyString(paramValue)) {
+                document.location.hash = hashParts[0] + '?' + paramName + '=' + paramValue;
+            }
             return;
         }
 
@@ -239,22 +243,27 @@ Strolch = {
             var query = queryArr[i];
             var queryParam = query.split('=');
             if (queryParam.length !== 2 || queryParam[0] !== paramName) {
-                hash += query;
-                if (i + 1 < queryArr.length) {
+                if (i != 0) {
                     hash += '&';
                 }
+                hash += query;
                 continue;
             }
 
-            hash += paramName + '=' + paramValue;
-            if (i + 1 < queryArr.length) {
-                hash += '&';
+            if (Strolch.isNotEmptyString(paramValue)) {
+                if (i != 0) {
+                    hash += '&';
+                }
+                hash += paramName + '=' + paramValue;
             }
             set = true;
         }
 
-        if (!set) {
-            hash += '&' + paramName + '=' + paramValue;
+        if (!set && Strolch.isNotEmptyString(paramValue)) {
+            if (i != 0) {
+                hash += '&';
+            }
+            hash += paramName + '=' + paramValue;
         }
 
         document.location.hash = hash
@@ -271,7 +280,7 @@ Strolch = {
     },
 
     isEmptyString: function (val) {
-        return typeof val == 'undefined' || val == '';
+        return typeof val == 'undefined' || val == null || val == '';
     },
     isNotEmptyString: function (val) {
         return !this.isEmptyString(val);
