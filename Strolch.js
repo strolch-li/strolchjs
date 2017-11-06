@@ -142,7 +142,6 @@ Strolch = {
         return false;
     },
 
-
     /*
      * Utils
      */
@@ -330,7 +329,7 @@ Strolch = {
         var date = new Date(val);
 
         var y = date.getFullYear();
-        var m = pad10(date.getMonth());
+        var m = pad10(date.getMonth() + 1);
         var d = pad10(date.getDate());
         var h = pad10(date.getHours());
         var mi = pad10(date.getMinutes());
