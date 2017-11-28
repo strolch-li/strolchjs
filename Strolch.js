@@ -68,9 +68,9 @@ Strolch = {
         } else {
             var userLang;
             if (navigator.languages && navigator.languages.length > 0) {
-                userLang = navigator.languages[0].substr(0, 2);
+                userLang = navigator.languages[0].substr(0, 2).toLowerCase();
             } else if (navigator.language) {
-                userLang = navigator.language.substr(0, 2);
+                userLang = navigator.language.substr(0, 2).toLowerCase();
             }
 
             if (userLang == 'en' || userLang == 'de') {
