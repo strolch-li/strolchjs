@@ -63,7 +63,7 @@ Strolch = {
         if (userConfig && this.isNotEmptyString(userConfig.locale)) {
             userLocale = userConfig.locale;
             if (userLocale.length > 2) {
-                userLocale = userLocale.substr(0, 2);
+                userLocale = userLocale.substr(0, 2).toLowerCase();
             }
         } else {
             var userLang;
