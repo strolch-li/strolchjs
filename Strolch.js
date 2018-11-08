@@ -4,7 +4,7 @@
 Strolch = {
 
     props: {
-        strolch_js: '0.1.2',
+        strolch_js: '0.2.4',
         version: null,
         revision: null,
         userConfig: null,
@@ -122,6 +122,9 @@ Strolch = {
     hasQueryPrivilege: function (privilegeValue) {
         return this.hasPrivilege('li.strolch.model.query.StrolchQuery', privilegeValue);
     },
+    hasSearchPrivilege: function (privilegeValue) {
+        return this.hasPrivilege('li.strolch.search.StrolchSearch', privilegeValue);
+    },
     hasServicePrivilege: function (privilegeValue) {
         return this.hasPrivilege('li.strolch.service.api.Service', privilegeValue);
     },
@@ -134,6 +137,9 @@ Strolch = {
         if (privilege == null || (typeof privilege.allAllowed == 'undefined') || (!privilege.allAllowed && typeof privilege.allowList == 'undefined')) {
             return false;
         }
+
+        if (privilegeValue == null)
+            return true;
 
         // now we handle the privilege access
         if (privilege.allAllowed) return true;
