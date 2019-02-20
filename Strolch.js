@@ -4,7 +4,7 @@
 Strolch = {
 
     props: {
-        strolch_js: '0.2.4',
+        strolch_js: '0.2.5',
         version: null,
         revision: null,
         userConfig: null,
@@ -230,6 +230,9 @@ Strolch = {
             }
             hash += paramName + '=' + paramValue;
         }
+
+        if (hash.charAt(hash.length - 1) == "?")
+            hash = hash.substr(0, hash.length - 1);
 
         document.location.hash = hash
     },
