@@ -3,8 +3,10 @@
  */
 Strolch = {
 
+    appVersion: null,
+
     props: {
-        strolch_js: '0.2.5',
+        strolch_js: '0.2.6',
         version: null,
         revision: null,
         userConfig: null,
@@ -22,6 +24,12 @@ Strolch = {
     /*
      * configuration
      */
+    setAppVersion: function (appVersion) {
+        this.appVersion = appVersion;
+    },
+    getAppVersion: function () {
+        return this.appVersion;
+    },
     getAuthToken: function () {
         return localStorage.authToken;
     },
@@ -146,6 +154,16 @@ Strolch = {
 
         for (var i = 0; i < privilege.allowList.length; i++) {
             if (privilege.allowList[i] == privilegeValue) return true;
+        }
+
+        return false;
+    },
+
+    hasComponent: function (componentName) {
+        for (var i = 0; i < this.appVersion.componentVersions.length; i++) {
+            var componentV = this.appVersion.componentVersions[i];
+            if (componentV.componentName == componentName)
+                return true;
         }
 
         return false;
