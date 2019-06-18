@@ -6,7 +6,7 @@ Strolch = {
     appVersion: null,
 
     props: {
-        strolch_js: '0.2.6',
+        strolch_js: '0.2.7',
         version: null,
         revision: null,
         userConfig: null,
