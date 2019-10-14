@@ -205,8 +205,14 @@ Strolch = {
         var hashParts = hash.split('?');
         if (hashParts.length !== 2) {
             if (this.isNotEmptyString(paramValue)) {
-                document.location.hash = hash + '/?' + paramName + '=' + paramValue;
+                if (hash.endsWith("/"))
+                    document.location.hash = hash + '?' + paramName + '=' + paramValue;
+                else
+                    document.location.hash = hash + '/?' + paramName + '=' + paramValue;
+            } else if (hash.endsWith("/")) {
+                document.location.hash = hash.substr(0, hash.length - 2);
             }
+
             return;
         }
 
@@ -220,37 +226,42 @@ Strolch = {
         hash = hashParts[0] + '?';
 
         var set = false;
+        var first = true;
         var queryParams = hashParts[1];
         var queryArr = queryParams.split('&');
         for (var i = 0; i < queryArr.length; i++) {
             var query = queryArr[i];
             var queryParam = query.split('=');
             if (queryParam.length !== 2 || queryParam[0] !== paramName) {
-                if (i != 0) {
+                if (!first)
                     hash += '&';
-                }
+                first = false;
                 hash += query;
                 continue;
             }
 
             if (this.isNotEmptyString(paramValue)) {
-                if (i != 0) {
+                if (!first)
                     hash += '&';
-                }
+                first = false;
                 hash += paramName + '=' + paramValue;
+
             }
             set = true;
         }
 
         if (!set && this.isNotEmptyString(paramValue)) {
-            if (i != 0) {
+            if (!first)
                 hash += '&';
-            }
             hash += paramName + '=' + paramValue;
         }
 
-        if (hash.charAt(hash.length - 1) == "?")
-            hash = hash.substr(0, hash.length - 1);
+        if (hash.charAt(hash.length - 1) === "?") {
+            if (hash.charAt(hash.length - 2) === "/")
+                hash = hash.substr(0, hash.length - 2);
+            else
+                hash = hash.substr(0, hash.length - 1);
+        }
 
         document.location.hash = hash
     },
