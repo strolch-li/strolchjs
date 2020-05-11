@@ -6,7 +6,7 @@ Strolch = {
     appVersion: null,
 
     props: {
-        strolch_js: '0.2.7',
+        strolch_js: '0.4.0',
         version: null,
         revision: null,
         userConfig: null,
@@ -31,34 +31,29 @@ Strolch = {
         return this.appVersion;
     },
     getAuthToken: function () {
-        return localStorage.authToken;
+        return this.getCookie("strolch.authorization");
     },
     setAuthToken: function (authToken) {
-        return localStorage.authToken = authToken;
+        if (!this.hasAuthToken())
+            this.setCookie("strolch.authorization", authToken);
     },
     clearAuthToken: function (authToken) {
-        delete localStorage.authToken;
+        // do nothing
     },
     hasAuthToken: function () {
-        return localStorage.authToken != null;
+        return this.getCookie("strolch.authorization") !== "";
     },
     getUserConfig: function () {
-        if (this.props.userConfig == null) {
-            var data = localStorage.userData;
-            if (data == null) return null;
-            this.props.userConfig = JSON.parse(data);
-        }
-
         return this.props.userConfig;
     },
     setUserConfig: function (data) {
         if (data == null) throw "Data can not be null!";
+        delete data.sessionId;
+        delete data.authToken;
         this.props.userConfig = data;
-        return localStorage.userData = JSON.stringify(data);
     },
     clearStorageData: function () {
-        delete localStorage.authToken;
-        delete localStorage.userData;
+        // do nothing
     },
 
     getUserLocale: function () {
@@ -264,6 +259,48 @@ Strolch = {
         }
 
         document.location.hash = hash
+    },
+
+    getCookie: function (cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    },
+    setCookie: function (cname, cvalue, expiration) {
+        console.log("Setting cookie " + cname);
+
+        var expires;
+        if (expiration == null) {
+            var d = new Date();
+            d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+            expires = d.toUTCString();
+        } else if (typeof expiration == "object" && expiration instanceof Date) {
+            expires = expiration.toUTCString();
+        } else if (typeof expiration == "number") {
+            var d = new Date();
+            d.setTime(d.getTime() + (validDays * 24 * 60 * 60 * 1000));
+            expires = d.toUTCString();
+        } else {
+            var d = new Date();
+            d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+            expires = d.toUTCString();
+        }
+
+        document.cookie = cname + "=" + cvalue + ";expires=" + expires + ";path=/";
+    },
+    deleteCookie: function (cname) {
+        console.log("Deleting cookie " + cname);
+        document.cookie = cname + '=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     },
 
     uuid: function () {
@@ -498,7 +535,7 @@ Strolch = {
 };
 
 if (!String.prototype.endsWith) {
-    String.prototype.endsWith = function(searchString, position) {
+    String.prototype.endsWith = function (searchString, position) {
         var subjectString = this.toString();
         if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
             position = subjectString.length;
@@ -512,7 +549,7 @@ if (!String.prototype.endsWith) {
 // https://tc39.github.io/ecma262/#sec-array.prototype.find
 if (!Array.prototype.find) {
     Object.defineProperty(Array.prototype, 'find', {
-        value: function(predicate) {
+        value: function (predicate) {
             // 1. Let O be ? ToObject(this value).
             if (this == null) {
                 throw new TypeError('"this" is null or not defined');
