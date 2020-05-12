@@ -6,7 +6,7 @@ Strolch = {
     appVersion: null,
 
     props: {
-        strolch_js: '0.4.0',
+        strolch_js: '0.4.1',
         version: null,
         revision: null,
         userConfig: null,
@@ -48,8 +48,6 @@ Strolch = {
     },
     setUserConfig: function (data) {
         if (data == null) throw "Data can not be null!";
-        delete data.sessionId;
-        delete data.authToken;
         this.props.userConfig = data;
     },
     clearStorageData: function () {
