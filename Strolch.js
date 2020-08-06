@@ -6,7 +6,7 @@ Strolch = {
     appVersion: null,
 
     props: {
-        strolch_js: '0.4.1',
+        strolch_js: '0.4.2',
         version: null,
         revision: null,
         userConfig: null,
@@ -493,9 +493,177 @@ Strolch = {
         return y + m + d + h + mi + s;
     },
 
+    // gets the clock time as displayed in the UI
+    getTimeString: function (datetime) {
+        var hour = datetime.getHours().toString();
+        var min = datetime.getMinutes().toString();
+
+        hour = hour.length < 2 ? "0" + hour : hour;
+        min = min.length < 2 ? "0" + min : min;
+        return hour + ":" + min;
+    },
+
+    // gets the calendar date as displayed in the UI
+    getDateString: function (datetime, addCentury) {
+        if (typeof (datetime) === 'string') {
+            datetime = new Date(datetime);
+        }
+
+        var day = (datetime.getDate()).toString();
+        var month = (datetime.getMonth() + 1).toString();
+        var year = (datetime.getFullYear()).toString();
+
+        day = day.length < 2 ? "0" + day : day;
+        month = month.length < 2 ? "0" + month : month;
+        year = addCentury ? year : year.slice(-2);
+        return day + "." + month + "." + year;
+    },
+
+    // gets the date of a date string from getDateString()
+    getDate: function (datetimeString) {
+        var splitString = datetimeString.split(".");
+        if (splitString.length !== 3) return null;
+
+        var year = Number(splitString[2]);
+        var month = Number(splitString[1]) - 1;
+        var day = Number(splitString[0]);
+        return new Date(year, month, day);
+    },
+
+    clearTime: function (date) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+
+        return date;
+    },
+    dateToJson: function (date) {
+        date.setTime(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+        return date.toJSON();
+    },
+
+    // returns true if a datetime has past
+    isPast: function (datetime) {
+        return Date.now() > datetime.getTime();
+    },
+
+    // returns true if a datetime is future
+    isFuture: function (datetime) {
+        return Date.now() < datetime.getTime();
+    },
+
+    // turns hours into milliseconds
+    hToMs: function (hour) {
+        return hour * 3600000;
+    },
+
+    // turns milliseconds into hours
+    msToH: function (milliseconds) {
+        return milliseconds / 3600000;
+    },
+
     isInfinite: function (val) {
         if (val == '-') return true;
         return moment(val).isAfter(moment('2100-01-01'));
+    },
+
+    isEqual: function (v1, v2) {
+        return v1 === v2;
+    },
+    stringToArray: function (string) {
+        if (string === null || string.length === 0)
+            return [];
+        var a = [];
+        var b = string.split(',');
+        for (var i = 0; i < b.length; i++) {
+            a.push(b[i].trim());
+        }
+        return a;
+    },
+    stringArrayLength: function (string) {
+        if (string === null || string.length === 0)
+            return 0;
+        return string.split(',').length;
+    },
+
+    isDefined: function (arg0) {
+        return arg0 !== undefined;
+    },
+    isNull: function (arg0) {
+        return arg0 === undefined || arg0 === null;
+    },
+    isNotNull: function (arg0) {
+        return arg0 !== undefined && arg0 !== null;
+    },
+    isNaN: function (arg0) {
+        return this.stringEmpty(arg0) || isNaN(arg0);
+    },
+    equal: function (arg0, arg1) {
+        return arg0 === arg1;
+    },
+    notEqual: function (arg0, arg1) {
+        return arg0 !== arg1;
+    },
+    defined: function (arg0) {
+        return !!arg0;
+    },
+    greater: function (arg0, arg1) {
+        return arg0 > arg1;
+    },
+    greaterEqual: function (arg0, arg1) {
+        return arg0 >= arg1;
+    },
+    lesser: function (arg0, arg1) {
+        return arg0 < arg1;
+    },
+    lesserEqual: function (arg0, arg1) {
+        return arg0 <= arg1;
+    },
+    and: function (arg0, arg1) {
+        return !!(arg0 && arg1);
+    },
+    or: function (arg0, arg1) {
+        return !!(arg0 || arg1);
+    },
+    arrayLength: function (array) {
+        return (array && array.length) ? array.length : 0;
+    },
+    arrayFilled: function (array) {
+        return !!(array && array.length && array.length > 0);
+    },
+    arraySizeLessThan: function (array, size) {
+        return array != null && array.length < size;
+    },
+    arraySizeGreaterThanOrEq: function (array, size) {
+        return array != null && array.length >= size;
+    },
+    arrayEquals: function (array1, array2) {
+        if (array1 == null && array2 == null)
+            return true;
+        if (array1 == null && array2 != null)
+            return false;
+        if (array2 == null && array1 != null)
+            return false;
+        return (array1.length === array2.length) && array1.every(function (element, index) {
+            return element === array2[index];
+        });
+    },
+    add: function (arg0, arg1) {
+        return Number(arg0) + Number(arg1);
+    },
+    sub: function (arg0, arg1) {
+        return Number(arg0) - Number(arg1);
+    },
+    round: function (value) {
+        return Math.round(value * 1000) / 1000;
+    },
+    stringEmpty: function () {
+        for (var i in arguments) {
+            var arg = arguments[i];
+            if (!arg || arg.length === 0) return true;
+        }
+        return false;
     },
 
     rollingSequence: function (values) {
