@@ -367,7 +367,7 @@ Strolch = {
         return isIE;
     },
     isEdge: function () {
-        return !Susi.Compute.isIE() && !!window.StyleMedia;
+        return !Strolch.isIE() && !!window.StyleMedia;
     },
 
     equalsArray: function (a, b) {
