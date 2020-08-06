@@ -101,7 +101,7 @@ Strolch = {
         var privileges = userConfig.privileges;
         for (var i = 0; i < privileges.length; i++) {
             var privilege = privileges[i];
-            if (privilege.name == name) return privilege;
+            if (privilege.name === name) return privilege;
         }
         return null;
     },
@@ -111,7 +111,7 @@ Strolch = {
         var roles = userConfig.roles;
         for (var i = 0; i < roles.length; i++) {
             var role = roles[i];
-            if (role == name) return true;
+            if (role === name) return true;
         }
         return false;
     },
@@ -141,7 +141,7 @@ Strolch = {
         if (privilege.allAllowed) return true;
 
         for (var i = 0; i < privilege.allowList.length; i++) {
-            if (privilege.allowList[i] == privilegeValue) return true;
+            if (privilege.allowList[i] === privilegeValue) return true;
         }
 
         return false;
@@ -150,7 +150,7 @@ Strolch = {
     hasComponent: function (componentName) {
         for (var i = 0; i < this.appVersion.componentVersions.length; i++) {
             var componentV = this.appVersion.componentVersions[i];
-            if (componentV.componentName == componentName)
+            if (componentV.componentName === componentName)
                 return true;
         }
 
@@ -301,24 +301,24 @@ Strolch = {
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = (d + Math.random() * 16) % 16 | 0;
             d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+            return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
         });
         return uuid;
     },
 
     isEmptyString: function (val) {
-        return typeof val == 'undefined' || val == null || val == '';
+        return typeof val == 'undefined' || val == null || val === '';
     },
     isNotEmptyString: function (val) {
         return !this.isEmptyString(val);
     },
 
     isFloat: function (val) {
-        return Number(parseFloat(val)) == val;
+        return Number(parseFloat(val)) === val;
     },
 
     isInteger: function (val) {
-        return Number(parseInt(val)) == val;
+        return Number(parseInt(val)) === val;
     },
 
     isDate: function (val) {
@@ -444,14 +444,14 @@ Strolch = {
     },
 
     toLocalDate: function (val) {
-        if (this.isEmptyString(val) || val == '-') return '-';
+        if (this.isEmptyString(val) || val === '-') return '-';
         var date = new Date(val);
         if (this.props.locale != null) return date.toLocaleDateString(this.props.locale);
         return date.toLocaleDateString('de-CH')
     },
 
     toLocalDateTime: function (val) {
-        if (this.isEmptyString(val) || val == '-') return '-';
+        if (this.isEmptyString(val) || val === '-') return '-';
         var date = new Date(val);
         if (this.props.locale != null) return date.toLocaleDateString(this.props.locale) + ' ' + date.toLocaleTimeString(this.props.locale);
         return date.toLocaleDateString('de-CH') + ' ' + date.toLocaleTimeString('de-CH');
@@ -459,7 +459,7 @@ Strolch = {
 
     toDateTime: function (val) {
 
-        if (this.isEmptyString(val) || val == '-') return '-';
+        if (this.isEmptyString(val) || val === '-') return '-';
         var date = new Date(val);
 
         var y = date.getFullYear();
@@ -475,7 +475,7 @@ Strolch = {
 
     toDateTimeNoDelim: function (val) {
 
-        if (this.isEmptyString(val) || val == '-') return '-';
+        if (this.isEmptyString(val) || val === '-') return '-';
         var date = new Date(val);
 
         var y = date.getFullYear();
@@ -559,7 +559,7 @@ Strolch = {
     },
 
     isInfinite: function (val) {
-        if (val == '-') return true;
+        if (val === '-') return true;
         return moment(val).isAfter(moment('2100-01-01'));
     },
 
@@ -675,7 +675,7 @@ Strolch = {
             },
             next: function () {
                 var index = this.values.indexOf(this.current) + 1;
-                if (index == this.values.length) index = 0;
+                if (index === this.values.length) index = 0;
                 this.current = this.values[index];
                 return this.current;
             },
