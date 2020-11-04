@@ -314,11 +314,11 @@ Strolch = {
     },
 
     isFloat: function (val) {
-        return Number(parseFloat(val)) === val;
+        return parseFloat(val).toString() === val;
     },
 
     isInteger: function (val) {
-        return Number(parseInt(val)) === val;
+        return parseInt(val).toString() === val;
     },
 
     isDate: function (val) {
