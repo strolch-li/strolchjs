@@ -289,11 +289,11 @@ Strolch = {
             expires = d.toUTCString();
         }
 
-        document.cookie = cname + "=" + cvalue + ";expires=" + expires + ";path=/";
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=Strict;domain=" + document.domain;
     },
     deleteCookie: function (cname) {
         console.log("Deleting cookie " + cname);
-        document.cookie = cname + '=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        document.cookie = cname + "=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;SameSite=Strict;domain=" + document.domain;
     },
 
     uuid: function () {
