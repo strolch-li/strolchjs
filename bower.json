@@ -1,7 +1,7 @@
 {
   "name": "strolchjs",
-  "version": "0.4.4",
-  "main": "strolch.js",
+  "version": "0.5.0",
+  "main": "Strolch.js",
   "ignore": [
     "**/.*",
     "node_modules",

@@ -41,7 +41,8 @@ Strolch = {
         // do nothing
     },
     hasAuthToken: function () {
-        return this.getCookie("strolch.authorization") !== "";
+        var cookie = this.getCookie("strolch.authorization");
+        return cookie != null && cookie !== "";
     },
     getUserConfig: function () {
         return this.props.userConfig;
@@ -267,7 +268,7 @@ Strolch = {
                 return c.substring(name.length, c.length);
             }
         }
-        return "";
+        return null;
     },
     setCookie: function (cname, cvalue, expiration) {
         console.log("Setting cookie " + cname);
@@ -281,7 +282,7 @@ Strolch = {
             expires = expiration.toUTCString();
         } else if (typeof expiration == "number") {
             var d = new Date();
-            d.setTime(d.getTime() + (validDays * 24 * 60 * 60 * 1000));
+            d.setTime(d.getTime() + (expiration * 24 * 60 * 60 * 1000));
             expires = d.toUTCString();
         } else {
             var d = new Date();
@@ -500,7 +501,10 @@ Strolch = {
 
     // gets the calendar date as displayed in the UI
     getDateString: function (datetime, addCentury) {
-        if (typeof (datetime) === 'string') {
+        if (datetime == null)
+            return "";
+
+        if (typeof (datetime) == 'string') {
             datetime = new Date(datetime);
         }
 
@@ -516,6 +520,15 @@ Strolch = {
 
     // gets the date of a date string from getDateString()
     getDate: function (datetimeString) {
+        if (datetimeString == null || datetimeString.length === "")
+            return null;
+
+        if (datetimeString.indexOf("T") === 10) {
+            return new Date(datetimeString.substring(0, 10));
+        } else if (datetimeString.length === 10 && datetimeString.indexOf("-") === 4) {
+            return new Date(datetimeString);
+        }
+
         var splitString = datetimeString.split(".");
         if (splitString.length !== 3) return null;
 
