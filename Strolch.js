@@ -315,11 +315,13 @@ Strolch = {
     },
 
     isFloat: function (val) {
-        return parseFloat(val).toString() === val;
+        // noinspection EqualityComparisonWithCoercionJS
+        return parseFloat(val).toString() == val;
     },
 
     isInteger: function (val) {
-        return parseInt(val).toString() === val;
+        // noinspection EqualityComparisonWithCoercionJS
+        return parseInt(val).toString() == val;
     },
 
     isDate: function (val) {
