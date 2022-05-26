@@ -161,11 +161,34 @@ Strolch = {
     /*
      * Utils
      */
+    clearQueryParams: function () {
+        var hash = document.location.hash;
+        var hashParts = hash.split('?');
+        if (hashParts.length !== 2) return;
+        document.location.hash = hashParts[0];
+    },
     getQueryParamsAsString: function () {
         var hash = document.location.hash;
         var hashParts = hash.split('?');
         if (hashParts.length !== 2) return '';
         return decodeURIComponent(hashParts[1]);
+    },
+
+    getQueryParamsAsObject: function () {
+        var hash = document.location.hash;
+        var hashParts = hash.split('?');
+        if (hashParts.length !== 2) return {};
+
+        var result = {};
+        var queryParams = hashParts[1];
+        var queryArr = queryParams.split('&');
+        for (var i = 0; i < queryArr.length; i++) {
+            var queryParam = queryArr[i].split('=');
+            if (queryParam.length !== 2) continue;
+            result[decodeURIComponent(queryParam[0])] = decodeURIComponent(queryParam[1]);
+        }
+
+        return result;
     },
 
     getQueryParamValue: function (paramName) {
