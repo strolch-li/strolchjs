@@ -65,13 +65,13 @@ Strolch = {
         if (userConfig && this.isNotEmptyString(userConfig.locale)) {
             userLocale = userConfig.locale;
             if (userLocale.length > 2) {
-                userLocale = userLocale.substr(0, 2).toLowerCase();
+                userLocale = userLocale.substring(0, 2).toLowerCase();
             }
         } else {
             if (navigator.languages && navigator.languages.length > 0) {
-                userLocale = navigator.languages[0].substr(0, 2).toLowerCase();
+                userLocale = navigator.languages[0].substring(0, 2).toLowerCase();
             } else if (navigator.language) {
-                userLocale = navigator.language.substr(0, 2).toLowerCase();
+                userLocale = navigator.language.substring(0, 2).toLowerCase();
             } else {
                 userLocale = "en";
             }
@@ -199,7 +199,7 @@ Strolch = {
                 else
                     document.location.hash = hash + '/?' + paramName + '=' + paramValue;
             } else if (hash.endsWith("/")) {
-                document.location.hash = hash.substr(0, hash.length - 2);
+                document.location.hash = hash.substring(0, hash.length - 2);
             }
 
             return;
@@ -247,9 +247,9 @@ Strolch = {
 
         if (hash.charAt(hash.length - 1) === "?") {
             if (hash.charAt(hash.length - 2) === "/")
-                hash = hash.substr(0, hash.length - 2);
+                hash = hash.substring(0, hash.length - 2);
             else
-                hash = hash.substr(0, hash.length - 1);
+                hash = hash.substring(0, hash.length - 1);
         }
 
         document.location.hash = hash
