@@ -165,7 +165,7 @@ Strolch = {
         var hash = document.location.hash;
         var hashParts = hash.split('?');
         if (hashParts.length !== 2) return '';
-        return hashParts[1];
+        return decodeURIComponent(hashParts[1]);
     },
 
     getQueryParamValue: function (paramName) {
@@ -179,8 +179,8 @@ Strolch = {
         for (var i = 0; i < queryArr.length; i++) {
             var queryParam = queryArr[i].split('=');
             if (queryParam.length !== 2) continue;
-            var name = queryParam[0];
-            var value = queryParam[1];
+            var name = decodeURIComponent(queryParam[0]);
+            var value = decodeURIComponent(queryParam[1]);
             if (name === paramName && this.isNotEmptyString(value)) {
                 return value;
             }
@@ -189,15 +189,17 @@ Strolch = {
         return null;
     },
     setQueryParamValue: function (paramName, paramValue) {
+        var encodedName = encodeURIComponent(paramName);
+        var encodedValue = this.isEmptyString(paramValue) ? null : encodeURIComponent(paramValue);
 
         var hash = document.location.hash;
         var hashParts = hash.split('?');
         if (hashParts.length !== 2) {
-            if (this.isNotEmptyString(paramValue)) {
+            if (encodedValue != null) {
                 if (hash.endsWith("/"))
-                    document.location.hash = hash + '?' + paramName + '=' + paramValue;
+                    document.location.hash = hash + '?' + encodedName + '=' + encodedValue;
                 else
-                    document.location.hash = hash + '/?' + paramName + '=' + paramValue;
+                    document.location.hash = hash + '/?' + encodedName + '=' + encodedValue;
             } else if (hash.endsWith("/")) {
                 document.location.hash = hash.substring(0, hash.length - 2);
             }
@@ -206,8 +208,8 @@ Strolch = {
         }
 
         if (this.isEmptyString(hashParts[1])) {
-            if (this.isNotEmptyString(paramValue)) {
-                document.location.hash = hashParts[0] + '?' + paramName + '=' + paramValue;
+            if (encodedValue != null) {
+                document.location.hash = hashParts[0] + '?' + encodedName + '=' + encodedValue;
             }
             return;
         }
@@ -221,7 +223,7 @@ Strolch = {
         for (var i = 0; i < queryArr.length; i++) {
             var query = queryArr[i];
             var queryParam = query.split('=');
-            if (queryParam.length !== 2 || queryParam[0] !== paramName) {
+            if (queryParam.length !== 2 || queryParam[0] !== encodedName) {
                 if (!first)
                     hash += '&';
                 first = false;
@@ -229,20 +231,20 @@ Strolch = {
                 continue;
             }
 
-            if (this.isNotEmptyString(paramValue)) {
+            if (encodedValue != null) {
                 if (!first)
                     hash += '&';
                 first = false;
-                hash += paramName + '=' + paramValue;
+                hash += encodedName + '=' + encodedValue;
 
             }
             set = true;
         }
 
-        if (!set && this.isNotEmptyString(paramValue)) {
+        if (!set && encodedValue != null) {
             if (!first)
                 hash += '&';
-            hash += paramName + '=' + paramValue;
+            hash += encodedName + '=' + encodedValue;
         }
 
         if (hash.charAt(hash.length - 1) === "?") {
