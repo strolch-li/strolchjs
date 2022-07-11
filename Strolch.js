@@ -478,11 +478,15 @@ Strolch = {
         return date.toLocaleDateString('de-CH')
     },
 
-    toLocalDateTime: function (val) {
+    toLocalDateTime: function (val, withSeconds) {
         if (this.isEmptyString(val) || val === '-') return '-';
         var date = new Date(val);
-        if (this.props.locale != null) return date.toLocaleDateString(this.props.locale) + ' ' + date.toLocaleTimeString(this.props.locale);
-        return date.toLocaleDateString('de-CH') + ' ' + date.toLocaleTimeString('de-CH');
+        var locale = this.props.locale != null ? this.props.locale : "de-CH";
+        if (withSeconds) {
+            return date.toLocaleDateString(locale) + ' ' + date.toLocaleTimeString(locale);
+        } else {
+            return date.toLocaleDateString(locale) + ' ' + this.getTimeString(date);
+        }
     },
 
     toDateTime: function (val) {
