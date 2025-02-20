@@ -439,6 +439,12 @@ Strolch = {
         })
     },
 
+    getFilenameFromContentDisposition: function (xhr) {
+        var contentDisposition = xhr.getResponseHeader("content-disposition");
+        const match = contentDisposition.match(/filename\*?=(?:UTF-8'')?([^;]+)/i);
+        return match ? decodeURIComponent(match[1].replace(/["']/g, '')) : null;
+    },
+
     handleAjaxFileDownload: function (response, fileName, mimeType) {
         var blob = new Blob([response], {type: mimeType});
 
