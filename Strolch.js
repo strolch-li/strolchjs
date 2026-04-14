@@ -52,7 +52,8 @@ Strolch = {
         this.props.userConfig = data;
     },
     clearStorageData: function () {
-        // do nothing
+        this.appVersion = null;
+        this.props.userConfig = null;
     },
 
     getUserLocale: function () {
