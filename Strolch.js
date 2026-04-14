@@ -295,9 +295,7 @@ Strolch = {
         }
         return null;
     },
-    setCookie: function (cname, cvalue, expiration) {
-        console.log("Setting cookie " + cname);
-
+    setCookie: function (cname, cvalue, expiration, path) {
         var expires;
         if (expiration == null) {
             var d = new Date();
@@ -315,11 +313,16 @@ Strolch = {
             expires = d.toUTCString();
         }
 
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/;SameSite=Strict;domain=" + document.domain;
+        if (path == null)
+            path = "/";
+        console.log("Setting cookie " + cname + " with path=" + path);
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=" + path + ";SameSite=Strict;domain=" + window.location.hostname;
     },
-    deleteCookie: function (cname) {
-        console.log("Deleting cookie " + cname);
-        document.cookie = cname + "=; Path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;SameSite=Strict;domain=" + document.domain;
+    deleteCookie: function (cname, path) {
+        if (path == null)
+            path = "/";
+        console.log("Deleting cookie " + cname + " with path=" + path);
+        document.cookie = cname + "=; Path=" + path + "; expires=Thu, 01 Jan 1970 00:00:01 GMT;SameSite=Strict;domain=" + window.location.hostname;
     },
 
     uuid: function () {
