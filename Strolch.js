@@ -132,7 +132,7 @@ Strolch = {
         var privilege = this.getPrivilege(privilegeName);
 
         // handle user does not have expected privilege
-        if (privilege == null || (typeof privilege.allAllowed == 'undefined') || (!privilege.allAllowed && typeof privilege.allowList == 'undefined')) {
+        if (privilege == null) {
             return false;
         }
 
@@ -141,6 +141,10 @@ Strolch = {
 
         // now we handle the privilege access
         if (privilege.allAllowed) return true;
+
+        for (var i = 0; i < privilege.denyList.length; i++) {
+            if (privilege.denyList[i] === privilegeValue) return false;
+        }
 
         for (var i = 0; i < privilege.allowList.length; i++) {
             if (privilege.allowList[i] === privilegeValue) return true;
