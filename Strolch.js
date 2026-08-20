@@ -146,6 +146,8 @@ Strolch = {
             for (var i = 0; i < privilege.denyList.length; i++) {
                 if (privilege.denyList[i] === privilegeValue) return false;
             }
+
+            return true;
         }
 
         if (privilege.allowList != null && privilege.allowList.length > 0) {
